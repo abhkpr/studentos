@@ -1,16 +1,102 @@
-# React + Vite
+# StudentOS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> track your progress. build your future.
 
-Currently, two official plugins are available:
+a productivity app built for students — plan your day, log what you learn, get ai feedback, and visualize your consistency over time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **day planner** — set and track daily micro goals
+- **daily log** — write what you learned, rate your mood
+- **ai coach** — get personalized feedback on your progress
+- **progress graph** — github style contribution graph
+- **profile** — public profile with your stats
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## stack
+
+```
+frontend   → react + tailwind css
+database   → supabase (postgresql + auth)
+ai         → groq (llama 3.1)
+hosting    → vercel
+```
+
+---
+
+## live
+
+```
+https://app.abhishekkumar.xyz
+```
+
+---
+
+## run locally
+
+```bash
+git clone git@github.com:abhkpr/studentos.git
+cd studentos
+npm install
+```
+
+create `.env`:
+```
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_GROQ_API_KEY=your_groq_key
+```
+
+```bash
+npm run dev
+```
+
+---
+
+## database setup
+
+run this in Supabase SQL editor:
+
+```sql
+create table profiles (
+  id uuid references auth.users on delete cascade,
+  username text unique,
+  full_name text,
+  avatar_url text,
+  bio text,
+  college text,
+  created_at timestamp with time zone default timezone('utc'::text, now()),
+  primary key (id)
+);
+
+create table daily_logs (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references profiles(id) on delete cascade,
+  date date not null,
+  summary text,
+  mood int check (mood between 1 and 5),
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+create table goals (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references profiles(id) on delete cascade,
+  date date not null,
+  title text not null,
+  completed boolean default false,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+alter table profiles enable row level security;
+alter table daily_logs enable row level security;
+alter table goals enable row level security;
+```
+
+---
+
+```
+built by abhishek kumar — abhishekkumar.xyz
+```
