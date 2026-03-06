@@ -20,17 +20,9 @@ a productivity app built for students — plan your day, log what you learn, get
 
 ```
 frontend   → react + tailwind css
-database   → supabase (postgresql + auth)
+database   → postgresql + auth, Supabase
 ai         → groq (llama 3.1)
 hosting    → vercel
-```
-
----
-
-## live
-
-```
-https://app.abhishekkumar.xyz
 ```
 
 ---
@@ -97,6 +89,3 @@ alter table goals enable row level security;
 
 ---
 
-```
-built by abhishek kumar — abhishekkumar.xyz
-```
